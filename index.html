@@ -1,0 +1,64 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+
+<body>
+    <label for="a_value">Enter the a value</label>
+    <input type="number" id="a_value">
+    <br>
+    <label for="b_value">Enter the b value</label>
+    <input type="number" id="b_value">
+    <br>
+    <label for="c_value">Enter the c value</label>
+    <input type="number" id="c_value">
+    <br>
+    <label for="range">Enter the range</label>
+    <input type="number" id="range">
+
+    <button onclick="sendData()">Calculate graph</button>
+
+    <div id="tester" style="width:600px;height:250px;"></div>
+    <script type="text/javascript">
+        function sendData() {
+            var data = {
+                a: document.getElementById('a_value').value,
+                b: document.getElementById('b_value').value,
+                c: document.getElementById('c_value').value,
+                range: document.getElementById('range').value
+            }
+            console.log(data);
+            $.ajax({
+                method: "POST",
+                url: "http://localhost:3000/calculate",
+                contentType: "application/json",
+                dataType: "json",
+                data: JSON.stringify(data),
+                success: function (data) {
+                    console.log(data);
+                    TESTER = document.getElementById('tester');
+
+                    Plotly.plot(TESTER, [{
+                        x: data.x_arr,
+                        y: data.y_arr
+                    }], {
+                        margin: {
+                            t: 0
+                        }
+                    });
+                },
+                error: function (error) {
+                    alert(error.toString());
+                }
+            })
+        }
+    </script>
+</body>
+
+</html>
